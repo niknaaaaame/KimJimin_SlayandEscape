@@ -5,7 +5,7 @@ using UnityEngine;
 public class Attack : MonoBehaviour
 {
     public Player player;
-    public Monster monster;
+    //public Monster monster;
     // Start is called before the first frame update
     void Start()
     {
@@ -15,9 +15,14 @@ public class Attack : MonoBehaviour
 
     private void OnTriggerStay2D(Collider2D other)
     {
+        Monster monster = other.GetComponent<Monster>();
         if (other.CompareTag("Enemy") && player.isAttacking)
         {
-            monster.Die();
+            if (monster != null)
+            {
+                monster.Die();
+            }
+            
         }
     }
     // Update is called once per frame

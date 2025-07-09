@@ -7,12 +7,14 @@ public class Player : MonoBehaviour
     public float speed = 10f;
     public float jumpForce = 500f;
     public bool isAttacking = false;
+    public bool isDead = false;
 
     private float attackTime = 0f;
     private bool isGrounded = false;
     private bool isRuning = false;
-    private bool isDead = false;
-    
+
+
+
 
     private Rigidbody2D playerRigidbody;
     private Animator animator;
@@ -21,6 +23,7 @@ public class Player : MonoBehaviour
     {
         playerRigidbody = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
+    
     }
 
 
@@ -30,6 +33,7 @@ public class Player : MonoBehaviour
         {
             if(isAttacking != true)
             {
+                isDead = true;
                 Die();
             }
             else
@@ -61,6 +65,11 @@ public class Player : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (isDead)
+        {
+            return;
+        }
+
         animator.SetBool("Jump", !isGrounded);
         animator.SetBool("Run", isRuning);
         
@@ -125,6 +134,8 @@ public class Player : MonoBehaviour
 
     public void Die()
     {
-        gameObject.SetActive(false);
+        animator.SetTrigger("Death");
+        //gameObject.SetActive(false);
+        Destroy(gameObject, 1f);
     }
 }
