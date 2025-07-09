@@ -26,7 +26,7 @@ public class Monster : MonoBehaviour
         monsterRigidbody.velocity = new Vector2(direction.x * speed, monsterRigidbody.velocity.y);
 
 
-        // ½ºÇÁ¶óÀÌÆ® ¹ÝÀü (¼±ÅÃ)
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ® ï¿½ï¿½ï¿½ï¿½ (ï¿½ï¿½ï¿½ï¿½)
         if (direction.x < 0)
         {
             transform.localScale = new Vector3(-1, 1, 1);
@@ -37,5 +37,10 @@ public class Monster : MonoBehaviour
             transform.localScale = new Vector3(1, 1, 1);
         }
             
+    }
+
+    public void Die()
+    {
+        Destroy(gameObject);
     }
 }
