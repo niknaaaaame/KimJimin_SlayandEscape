@@ -10,6 +10,7 @@ TagManager:
   - DeadMonster
   - Attack
   - Bullet
+  - Door
   layers:
   - Default
   - TransparentFX

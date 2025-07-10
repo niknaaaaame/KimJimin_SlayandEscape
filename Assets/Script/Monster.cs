@@ -6,9 +6,10 @@ public class Monster : MonoBehaviour
 {
     public float speed = 5f;
     public Player player;
-    public float jumpForce = 500f;
+    public float jumpForce = 5f;
     private Rigidbody2D monsterRigidbody;
     private Animator animator;
+    public Vector2 offset = new Vector3(0, 1f);
 
     private bool isWalking = false;
     public bool isDead = false;
@@ -32,8 +33,8 @@ public class Monster : MonoBehaviour
             player = FindObjectOfType<Player>();
         }
 
-        lastSpawnTime = 0f;
-        timeBetSpawn = 0f;
+        lastSpawnTime = Time.time;
+        timeBetSpawn = Random.Range(timeBetMin, timeBetMax);
 
     }
 
@@ -45,8 +46,8 @@ public class Monster : MonoBehaviour
             if (isGrounded)
             {
                 isJumping = true;
-                monsterRigidbody.velocity = Vector2.zero;
-                monsterRigidbody.AddForce(new Vector2(0, jumpForce));
+                monsterRigidbody.velocity = new Vector2(monsterRigidbody.velocity.x, 0f); 
+                monsterRigidbody.velocity = new Vector2(monsterRigidbody.velocity.x, jumpForce); 
                 isJumping = false;
             }
         }
@@ -102,7 +103,7 @@ public class Monster : MonoBehaviour
             lastSpawnTime = Time.time;
             timeBetSpawn = Random.Range(timeBetMin, timeBetMax);
 
-            GameObject bullet = Instantiate(BulletPrefab, new Vector2(transform.position.x, transform.position.y), transform.rotation);
+            GameObject bullet = Instantiate(BulletPrefab, new Vector2(transform.position.x, transform.position.y) + offset, transform.rotation);
             Debug.Log("총알 소환됨!");
 
         }
@@ -120,6 +121,6 @@ public class Monster : MonoBehaviour
         isDead = true;
         gameObject.tag = "DeadMonster";
         animator.SetTrigger("Death");
-        Destroy(gameObject, 0.5f);
+        Destroy(gameObject, 0.3f);
     }
 }

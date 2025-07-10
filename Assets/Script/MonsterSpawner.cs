@@ -7,6 +7,7 @@ public class MonsterSpawner : MonoBehaviour
 {
     public GameObject monsterPrefab;
     public Player player;
+    
 
     //public int monsterMax = 100;
     public float timeBetMin = 3f;
@@ -16,12 +17,12 @@ public class MonsterSpawner : MonoBehaviour
 
     public float xMin = -16f;
     public float xMax = 35f;
-    private float yPos = 5f;
+    private float yPos = 3f;
     // Start is called before the first frame update
     void Start()
     {
-        lastSpawnTime = 0f;
-        timeBetSpawn = 0f;
+        lastSpawnTime = Time.time;
+        timeBetSpawn = Random.Range(timeBetMin, timeBetMax);
         player = FindObjectOfType<Player>();
 
     }

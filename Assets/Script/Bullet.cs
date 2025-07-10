@@ -7,7 +7,7 @@ public class Bullet : MonoBehaviour
     public Player player;
     public float speed = 3f;
 
-    private Rigidbody2D bulletRigidbody;
+    //private Rigidbody2D bulletRigidbody;
     private Vector2 direction;
     // Start is called before the first frame update
     void Start()
@@ -22,7 +22,7 @@ public class Bullet : MonoBehaviour
     }
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if(collision.tag != "Enemy" && collision.tag != "Attack")
+        if(collision.tag != "Enemy" && collision.tag != "Attack" && collision.tag != "Door")
         {
             Destroy(gameObject);
         }
@@ -34,6 +34,6 @@ public class Bullet : MonoBehaviour
        
         transform.position += (Vector3)direction * speed * Time.deltaTime;
             
-        
+        Destroy(gameObject, 5f);
     }
 }
