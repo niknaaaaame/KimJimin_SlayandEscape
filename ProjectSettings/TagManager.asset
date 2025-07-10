@@ -8,6 +8,8 @@ TagManager:
   - Enemy
   - Ground
   - DeadMonster
+  - Attack
+  - Bullet
   layers:
   - Default
   - TransparentFX
@@ -44,4 +46,10 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: Monster
+    uniqueID: 75368969
+    locked: 0
+  - name: Player
+    uniqueID: 424306933
     locked: 0

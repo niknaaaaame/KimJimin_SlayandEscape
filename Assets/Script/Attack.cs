@@ -5,10 +5,12 @@ using UnityEngine;
 public class Attack : MonoBehaviour
 {
     public Player player;
+    public int hunt;
     //public Monster monster;
     // Start is called before the first frame update
     void Start()
     {
+        hunt = 0;
         //player = GetComponent<Player>();
         //monster = GetComponent<Monster>();
     }
@@ -21,6 +23,7 @@ public class Attack : MonoBehaviour
             if (monster != null)
             {
                 monster.Die();
+                hunt++;
             }
             
         }

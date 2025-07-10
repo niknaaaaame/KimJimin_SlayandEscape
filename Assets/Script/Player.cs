@@ -13,6 +13,8 @@ public class Player : MonoBehaviour
     private bool isGrounded = false;
     private bool isRuning = false;
 
+    //public int Hunt = 0;
+
 
 
 
@@ -36,13 +38,14 @@ public class Player : MonoBehaviour
                 isDead = true;
                 Die();
             }
-            else
-            {
-                Debug.Log("적 처치!");
-            }
+            //else
+            //{
+            //    Hunt++;
+            //    Debug.Log("적 처치!");
+            //}
             
         }
-
+       
         if(collision.gameObject.CompareTag("Ground"))
         {
             
@@ -51,6 +54,16 @@ public class Player : MonoBehaviour
 
         }
         
+    }
+
+    private void OnTriggerStay2D(Collider2D collision)
+    {
+        if (collision.tag == "Bullet")
+        {
+            isDead = true;
+            Die();
+        }
+
     }
 
     private void OnCollisionExit2D(Collision2D collision)
@@ -102,7 +115,7 @@ public class Player : MonoBehaviour
 
         if(isAttacking == true)
         {
-            Debug.Log("공격 중!");
+            //Debug.Log("공격 중!");
             attackTime += Time.deltaTime;
         }
 
@@ -136,6 +149,9 @@ public class Player : MonoBehaviour
     {
         animator.SetTrigger("Death");
         //gameObject.SetActive(false);
+
+        GameManager gameManager = FindObjectOfType<GameManager>();
+        gameManager.EndGame();
         Destroy(gameObject, 1f);
     }
 }
