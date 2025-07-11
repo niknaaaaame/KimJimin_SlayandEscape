@@ -6,6 +6,7 @@ public class Attack : MonoBehaviour
 {
     public Player player;
     public int hunt;
+    public int atk = 3;
     //public Monster monster;
     // Start is called before the first frame update
     void Start()
@@ -22,8 +23,8 @@ public class Attack : MonoBehaviour
         {
             if (monster != null)
             {
-                monster.Die();
-                hunt++;
+                hunt += monster.Hit(atk);
+                //hunt++;
             }
             
         }

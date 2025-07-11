@@ -11,6 +11,10 @@ public class Monster : MonoBehaviour
     private Animator animator;
     public Vector2 offset = new Vector3(0, 1f);
 
+    public float hp = 5f;
+    private float invincibilityTime = 1f;
+    private float LastHitTime;
+
     private bool isWalking = false;
     public bool isDead = false;
     private bool isGrounded = false;
@@ -35,6 +39,7 @@ public class Monster : MonoBehaviour
 
         lastSpawnTime = Time.time;
         timeBetSpawn = Random.Range(timeBetMin, timeBetMax);
+        LastHitTime = Time.time;
 
     }
 
@@ -46,8 +51,8 @@ public class Monster : MonoBehaviour
             if (isGrounded)
             {
                 isJumping = true;
-                monsterRigidbody.velocity = new Vector2(monsterRigidbody.velocity.x, 0f); 
-                monsterRigidbody.velocity = new Vector2(monsterRigidbody.velocity.x, jumpForce); 
+                monsterRigidbody.velocity = new Vector2(monsterRigidbody.velocity.x, 0f);
+                monsterRigidbody.velocity = new Vector2(monsterRigidbody.velocity.x, jumpForce);
                 isJumping = false;
             }
         }
@@ -123,4 +128,22 @@ public class Monster : MonoBehaviour
         animator.SetTrigger("Death");
         Destroy(gameObject, 0.3f);
     }
+
+    public int Hit(int atk)
+    {
+        if (Time.time >= LastHitTime + invincibilityTime)
+        {
+            hp -= atk;
+            Debug.Log("몬스터" + hp);
+            LastHitTime = Time.time;
+            if (hp <= 0)
+            {
+                Die();
+                return 1;
+            }
+        }
+        return 0;
+        
+    }
+    
 }

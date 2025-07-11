@@ -9,6 +9,10 @@ public class Player : MonoBehaviour
     public bool isAttacking = false;
     public bool isDead = false;
 
+    public int hp = 3;
+    private float invincibilityTime = 1f;
+    private float LastHitTime;
+
     private float attackTime = 0f;
     private bool isGrounded = false;
     private bool isRuning = false;
@@ -25,46 +29,61 @@ public class Player : MonoBehaviour
     {
         playerRigidbody = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
+        LastHitTime = Time.time;
     
     }
 
 
-    private void OnCollisionEnter2D(Collision2D collision)
+    private void OnCollisionStay2D(Collision2D collision)
     {
-        if (collision.gameObject.CompareTag("Enemy"))
+        if (Time.time >= LastHitTime + invincibilityTime)
         {
-            if(isAttacking != true)
+            if (collision.gameObject.CompareTag("Enemy"))
             {
-                isDead = true;
-                Die();
+                if (isAttacking != true)
+                {
+                    Debug.Log(hp);
+                    //isDead = true;
+                    hp--;
+                }
+                //else
+                //{
+                //    Hunt++;
+                //    Debug.Log("적 처치!");
+                //}
+
             }
-            //else
-            //{
-            //    Hunt++;
-            //    Debug.Log("적 처치!");
-            //}
-            
+
+            if (collision.gameObject.CompareTag("Bullet"))
+            {
+                Debug.Log(hp);
+                hp--;
+            }
+            LastHitTime = Time.time;
         }
-       
-        if(collision.gameObject.CompareTag("Ground"))
+        
+            
+        if (collision.gameObject.CompareTag("Ground"))
         {
-            
+
             isGrounded = true;
-            
+
 
         }
         
     }
 
-    private void OnTriggerStay2D(Collider2D collision)
-    {
-        if (collision.tag == "Bullet")
-        {
-            isDead = true;
-            Die();
-        }
+    //private void OnTriggerEnter2D(Collider2D collision)
+    //{
+        //if (collision.tag == "Bullet")
+        //{
+            //Debug.Log(hp);
+            //isDead = true;
+            //Die();
+            //hp--;
+        //}
 
-    }
+    //}
 
     private void OnCollisionExit2D(Collision2D collision)
     {
@@ -85,49 +104,49 @@ public class Player : MonoBehaviour
 
         animator.SetBool("Jump", !isGrounded);
         animator.SetBool("Run", isRuning);
-        
+
         float moveInput = 0f;
-        
+
 
         if (Input.GetKey(KeyCode.RightArrow))
         {
             moveInput = 1f;
             transform.localScale = new Vector3(1, 1, 1);
-            isRuning = true;   
+            isRuning = true;
         }
         if (Input.GetKey(KeyCode.LeftArrow))
         {
             moveInput = -1f;
             transform.localScale = new Vector3(-1, 1, 1);
-            isRuning = true; 
+            isRuning = true;
         }
 
         if (Input.GetKeyUp(KeyCode.LeftArrow) || Input.GetKeyUp(KeyCode.RightArrow))
         {
-            isRuning = false; 
+            isRuning = false;
         }
 
-        if(Input.GetKeyDown(KeyCode.Z) && isAttacking==false && isGrounded)
+        if (Input.GetKeyDown(KeyCode.Z) && isAttacking == false && isGrounded)
         {
             isAttacking = true;
             animator.SetTrigger("Attack");
         }
 
-        if(isAttacking == true)
+        if (isAttacking == true)
         {
             //Debug.Log("공격 중!");
             attackTime += Time.deltaTime;
         }
 
-        
 
-        if(attackTime >= 0.5f)
+
+        if (attackTime >= 0.5f)
         {
             isAttacking = false;
             attackTime = 0f;
         }
 
-        
+
 
         Vector2 velocity = playerRigidbody.velocity;
         velocity.x = moveInput * speed;
@@ -141,7 +160,14 @@ public class Player : MonoBehaviour
                 playerRigidbody.velocity = Vector2.zero;
                 playerRigidbody.AddForce(new Vector2(0, jumpForce));
             }
-            
+
+        }
+
+        if (hp <= 0)
+        {
+            hp = 0;
+            isDead = true;
+            Die();
         }
     }
 
