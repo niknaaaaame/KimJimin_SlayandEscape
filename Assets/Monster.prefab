@@ -176,6 +176,7 @@ MonoBehaviour:
   player: {fileID: 0}
   jumpForce: 20
   offset: {x: 0, y: 1}
+  hp: 5
   isDead: 0
   BulletPrefab: {fileID: 6479260944552225041, guid: c734099d3bd51964287849b712987651, type: 3}
   timeBetMin: 3

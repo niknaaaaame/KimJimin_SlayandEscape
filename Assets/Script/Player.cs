@@ -16,6 +16,11 @@ public class Player : MonoBehaviour
     private float attackTime = 0f;
     private bool isGrounded = false;
     private bool isRuning = false;
+    private SpriteRenderer spriteRenderer;
+    private Color originalColor;
+    private float fadeTimer = 0f;
+    private float fadeDuration = 1f;
+    private bool isFadingBack = false;
 
     //public int Hunt = 0;
 
@@ -30,7 +35,8 @@ public class Player : MonoBehaviour
         playerRigidbody = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
         LastHitTime = Time.time;
-    
+        spriteRenderer = GetComponent<SpriteRenderer>();
+        originalColor = spriteRenderer.color;
     }
 
 
@@ -42,9 +48,10 @@ public class Player : MonoBehaviour
             {
                 if (isAttacking != true)
                 {
-                    Debug.Log(hp);
+                    Hit(); 
+                    //Debug.Log(hp);
                     //isDead = true;
-                    hp--;
+                    //hp--;
                 }
                 //else
                 //{
@@ -56,8 +63,7 @@ public class Player : MonoBehaviour
 
             if (collision.gameObject.CompareTag("Bullet"))
             {
-                Debug.Log(hp);
-                hp--;
+                Hit();
             }
             LastHitTime = Time.time;
         }
@@ -73,25 +79,36 @@ public class Player : MonoBehaviour
         
     }
 
+
+    private void Hit()
+    {
+        //Debug.Log(hp);
+        hp--;
+        spriteRenderer.color = Color.red;
+        fadeTimer = 0f;
+        isFadingBack = true;
+        
+    }
+
     //private void OnTriggerEnter2D(Collider2D collision)
     //{
-        //if (collision.tag == "Bullet")
-        //{
-            //Debug.Log(hp);
-            //isDead = true;
-            //Die();
-            //hp--;
-        //}
+    //if (collision.tag == "Bullet")
+    //{
+    //Debug.Log(hp);
+    //isDead = true;
+    //Die();
+    //hp--;
+    //}
 
     //}
 
     private void OnCollisionExit2D(Collision2D collision)
     {
-         if (collision.gameObject.CompareTag("Ground"))
+        if (collision.gameObject.CompareTag("Ground"))
         {
-            
+
             isGrounded = false;
-            
+
         }
     }
     // Update is called once per frame
@@ -107,7 +124,19 @@ public class Player : MonoBehaviour
 
         float moveInput = 0f;
 
+        if (isFadingBack)
+        {
+            fadeTimer += Time.deltaTime;
+            float timer = fadeTimer / fadeDuration;
 
+            spriteRenderer.color = Color.Lerp(Color.red, originalColor, timer);
+
+            if (timer >= 1f)
+            {
+                spriteRenderer.color = originalColor;
+                isFadingBack = false;
+            }
+        }
         if (Input.GetKey(KeyCode.RightArrow))
         {
             moveInput = 1f;

@@ -5,6 +5,7 @@ using UnityEngine.SceneManagement;
 
 public class Clear : MonoBehaviour
 {
+    private int choice = 0;
     // Start is called before the first frame update
     void Start()
     {
@@ -14,14 +15,53 @@ public class Clear : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (Input.GetKeyDown(KeyCode.RightArrow))
+        {
+            if (choice == 1)
+            {
+                choice = 0;
+            }
+            else
+            {
+                choice++;
+            }
+        }
+        if (Input.GetKeyDown(KeyCode.LeftArrow))
+        {
+            if (choice == 0)
+            {
+                choice = 1;
+            }
+            else
+            {
+                choice--;
+            }
+        }
+
+        if (choice == 0)
+        {
+            transform.position = new Vector3(-7f, -1f, 0f);
+        }
+        if (choice == 1)
+        {
+            transform.position = new Vector3(1f, -1f, 0f);
+        }
         if (Input.GetKeyDown(KeyCode.Z))
         {
-            SceneManager.LoadScene("Main");
+            if (choice == 0)
+            {
+                SceneManager.LoadScene("Main");
+            }
+            else
+            {
+                Debug.Log("Í≤åÏûÑ Ï¢ÖÎ£åÎê®!");
+                Application.Quit();
+            }
         }
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            Debug.Log("∞‘¿” ¡æ∑·!");
-            Application.Quit();
-        }
+        //if (Input.GetKeyDown(KeyCode.Escape))
+        //{
+        //Debug.Log("ÔøΩÔøΩÔøΩÔøΩ ÔøΩÔøΩÔøΩÔøΩ!");
+        //Application.Quit();
+        //}
     }
 }

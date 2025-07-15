@@ -26,6 +26,11 @@ public class Monster : MonoBehaviour
     public float timeBetMax = 10f;
     private float timeBetSpawn;
     private float lastSpawnTime;
+    private SpriteRenderer spriteRenderer;
+    private Color originalColor;
+    private float fadeTimer = 0f;
+    private float fadeDuration = 1f;
+    private bool isFadingBack = false;
 
     // Start is called before the first frame update
     void Start()
@@ -40,6 +45,8 @@ public class Monster : MonoBehaviour
         lastSpawnTime = Time.time;
         timeBetSpawn = Random.Range(timeBetMin, timeBetMax);
         LastHitTime = Time.time;
+        spriteRenderer = GetComponent<SpriteRenderer>();
+        originalColor = spriteRenderer.color;
 
     }
 
@@ -79,9 +86,24 @@ public class Monster : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        spriteRenderer.color = Color.red;
         if (isDead || isJumping)
         {
             return;
+        }
+        if (isFadingBack)
+        {
+            fadeTimer += Time.deltaTime;
+            float timer = fadeTimer / fadeDuration;
+
+            spriteRenderer.color = Color.Lerp(Color.red, originalColor, timer);
+
+            if (timer >= 1f)
+            {
+                spriteRenderer.color = originalColor;
+                isFadingBack = false;
+                Debug.Log("빨간색이었다!!!");
+            }
         }
         animator.SetBool("Run", isWalking);
         if (player != null)
@@ -113,6 +135,11 @@ public class Monster : MonoBehaviour
 
         }
 
+        
+        
+
+        
+
 
 
 
@@ -134,8 +161,12 @@ public class Monster : MonoBehaviour
         if (Time.time >= LastHitTime + invincibilityTime)
         {
             hp -= atk;
-            Debug.Log("몬스터" + hp);
+            //Debug.Log("몬스터" + hp);
             LastHitTime = Time.time;
+            spriteRenderer.color = Color.red;
+            fadeTimer = 0f;
+            isFadingBack = true;
+            Debug.Log("맞았다!!!");
             if (hp <= 0)
             {
                 Die();
