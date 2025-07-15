@@ -17,7 +17,10 @@ public class Bullet : MonoBehaviour
             player = FindObjectOfType<Player>();
         }
 
-        direction = (player.transform.position - transform.position).normalized;
+        float yOffset = 1f;
+        Vector3 targetPos = player.transform.position + new Vector3(0, yOffset, 0);
+
+        direction = (targetPos - transform.position).normalized;
 
     }
     private void OnTriggerEnter2D(Collider2D collision)

@@ -1,12 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerHpController : MonoBehaviour
 {
 
     public Player player;
     public GameObject hpPrefab;
+    public RectTransform hpParent;
 
     public float xPos = 50f;
     public float yPos = 50f;
@@ -24,7 +26,9 @@ public class PlayerHpController : MonoBehaviour
 
         for (int i = 0; i < player.hp; i++)
         {
-            GameObject hp = Instantiate(hpPrefab, new Vector2(xPos + (i * 100f), yPos), transform.rotation);
+            GameObject hp = Instantiate(hpPrefab, hpParent);
+            RectTransform rt = hp.GetComponent<RectTransform>();
+            rt.anchoredPosition = new Vector2(50f + (i * 100f), 50f);
             hpList.Add(hp);
         }
 
@@ -48,23 +52,11 @@ public class PlayerHpController : MonoBehaviour
     {
         for (int i = 0; i < hpList.Count; i++)
         {
-            if (i < player.hp)
+            Image img = hpList[i].GetComponent<Image>();
+            if (img != null)
             {
-                SetHeartColor(hpList[i], Color.white);
+                img.color = (i < player.hp) ? Color.white : Color.black;
             }
-            else
-            {
-                SetHeartColor(hpList[i], Color.black);
-            }
-        }
-    }
-
-    private void SetHeartColor(GameObject heart, Color color)
-    {
-        SpriteRenderer sr = heart.GetComponent<SpriteRenderer>();
-        if (sr != null)
-        {
-            sr.color = color;
         }
     }
 }

@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
+    public AudioClip AttackClip;
+    public AudioClip HitClip;
+    private AudioSource playerAudio;
     public float speed = 10f;
     public float jumpForce = 500f;
     public bool isAttacking = false;
@@ -32,6 +35,8 @@ public class Player : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        playerAudio = GetComponent<AudioSource>();
+
         playerRigidbody = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
         LastHitTime = Time.time;
@@ -48,7 +53,14 @@ public class Player : MonoBehaviour
             {
                 if (isAttacking != true)
                 {
-                    Hit(); 
+                    hp--;
+                    spriteRenderer.color = Color.red;
+                    fadeTimer = 0f;
+                    isFadingBack = true;
+                    playerAudio.clip = HitClip;
+                    playerAudio.Play();
+                    playerRigidbody.velocity = Vector2.zero;
+                    playerRigidbody.AddForce(new Vector2(0, jumpForce));
                     //Debug.Log(hp);
                     //isDead = true;
                     //hp--;
@@ -61,10 +73,13 @@ public class Player : MonoBehaviour
 
             }
 
-            if (collision.gameObject.CompareTag("Bullet"))
-            {
-                Hit();
-            }
+            //if (collision.gameObject.CompareTag("Bullet"))
+            //{
+                //hp--;
+                //spriteRenderer.color = Color.red;
+                //fadeTimer = 0f;
+                //isFadingBack = true;
+            //}
             LastHitTime = Time.time;
         }
         
@@ -80,27 +95,43 @@ public class Player : MonoBehaviour
     }
 
 
-    private void Hit()
-    {
-        //Debug.Log(hp);
-        hp--;
-        spriteRenderer.color = Color.red;
-        fadeTimer = 0f;
-        isFadingBack = true;
-        
-    }
-
-    //private void OnTriggerEnter2D(Collider2D collision)
+    //private void Hit()
     //{
-    //if (collision.tag == "Bullet")
+    //Debug.Log(hp);
+    //hp--;
+    //spriteRenderer.color = Color.red;
+    //fadeTimer = 0f;
+    //isFadingBack = true;
+
+    //}
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (Time.time >= LastHitTime + invincibilityTime)
+        {
+            if (collision.tag == "Bullet")
+            {
+                hp--;
+                spriteRenderer.color = Color.red;
+                fadeTimer = 0f;
+                isFadingBack = true;
+                LastHitTime = Time.time;
+                playerAudio.clip = HitClip;
+                playerAudio.Play();
+                playerRigidbody.velocity = Vector2.zero;
+                playerRigidbody.AddForce(new Vector2(0, jumpForce));
+            }
+        }
+        
     //{
     //Debug.Log(hp);
     //isDead = true;
     //Die();
     //hp--;
-    //}
+    }
 
     //}
+   
 
     private void OnCollisionExit2D(Collision2D collision)
     {
@@ -159,6 +190,8 @@ public class Player : MonoBehaviour
         {
             isAttacking = true;
             animator.SetTrigger("Attack");
+            playerAudio.clip = AttackClip;
+            playerAudio.Play();
         }
 
         if (isAttacking == true)
